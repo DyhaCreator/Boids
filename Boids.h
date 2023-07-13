@@ -8,6 +8,6 @@ public:
         this->rotate = rotate;
     }
     void update(){
-        rotate+=0.01;
+        
     }
 };

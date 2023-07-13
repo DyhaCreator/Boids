@@ -9,7 +9,7 @@ public:
     const int Width = 1080;
     const int Height = 720;
     const int FrameRate = 100;
-    const int BOIDS_SIZE = 100;
+    const int BOIDS_SIZE = 50;
     sf::Event ev;
     sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(1080,720), "Test Gen");
 
