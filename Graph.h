@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include <cmath>
 #include "Boids.h"
 
@@ -8,6 +9,7 @@ public:
     const int Width = 1080;
     const int Height = 720;
     const int FrameRate = 100;
+    const int BOIDS_SIZE = 100;
     sf::Event ev;
     sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(1080,720), "Test Gen");
 
@@ -26,10 +28,12 @@ public:
         }
     }
 
-    void render(int frame){
+    void render(int frame, std::vector<Boids>boids){
         this->window.clear(sf::Color(50,50,50));
         
-        Draw_Boids(this->Width / 2, this->Height / 2, (float)frame / 1000.f, 50);
+        for(int i = 0; i < boids.size(); i++){
+            Draw_Boids(boids[i].x, boids[i].y, boids[i].rotate, this->BOIDS_SIZE);
+        }
 
         this->window.display();
     }
