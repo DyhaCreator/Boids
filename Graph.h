@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include "Boids.h"
 
 class Graph{
 public:
@@ -28,7 +29,7 @@ public:
     void render(int frame){
         this->window.clear(sf::Color(50,50,50));
         
-        Draw_Boids(this->Width / 2, this->Height / 2, (float)frame / 1000.f, 500);
+        Draw_Boids(this->Width / 2, this->Height / 2, (float)frame / 1000.f, 50);
 
         this->window.display();
     }
