@@ -8,7 +8,7 @@ public:
     bool isOpen = true;
     const int Width = 1080;
     const int Height = 720;
-    const int FrameRate = 100;
+    const int FrameRate = 250;
     const int BOIDS_SIZE = 30;
     sf::Event ev;
     sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(1080,720), "Test Gen");
@@ -39,6 +39,7 @@ public:
     }
 
     void Draw_Boids(int x, int y, float angle, int size){
+        //std::cout << x << " " << y << " " << angle << std::endl;
         const float BOTTOM_ANGLE = 0.6;
 
         sf::ConvexShape convex;
