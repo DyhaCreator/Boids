@@ -9,7 +9,7 @@ public:
     const int Width = 1080;
     const int Height = 720;
     const int FrameRate = 100;
-    const int BOIDS_SIZE = 50;
+    const int BOIDS_SIZE = 30;
     sf::Event ev;
     sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(1080,720), "Test Gen");
 
@@ -45,9 +45,9 @@ public:
 
         convex.setPointCount(3);
 
-        convex.setPoint(0, sf::Vector2f(sin(angle) * size / 2 + x, y - cos(angle) * size / 2));
-        convex.setPoint(1, sf::Vector2f(sin(angle - M_PI + BOTTOM_ANGLE) * size / 2 + x, y - cos(angle - M_PI + BOTTOM_ANGLE) * size / 2));
-        convex.setPoint(2, sf::Vector2f(sin(angle - M_PI - BOTTOM_ANGLE) * size / 2 + x, y - cos(angle - M_PI - BOTTOM_ANGLE) * size / 2));
+        convex.setPoint(0, sf::Vector2f(cos(angle) * size / 2 + x, y - sin(angle) * size / 2));
+        convex.setPoint(1, sf::Vector2f(cos(angle - M_PI + BOTTOM_ANGLE) * size / 2 + x, y - sin(angle - M_PI + BOTTOM_ANGLE) * size / 2));
+        convex.setPoint(2, sf::Vector2f(cos(angle - M_PI - BOTTOM_ANGLE) * size / 2 + x, y - sin(angle - M_PI - BOTTOM_ANGLE) * size / 2));
 
         this->window.draw(convex);
         /*
