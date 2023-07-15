@@ -9,11 +9,15 @@ public:
     float x, y;
     float rotate;
     float speedX = 0, speedY = 0;
+    float targetX = 0, targetY = 0;
     float maxSpeed = 1;
     Boids(int x, int y, float rotate){
         this->x = x;
         this->y = y;
         this->rotate = rotate;
+        this->targetX = this->x;
+        this->targetY = this->y;
+        //std::cout << targetX - this->x << " " << targetY - this->y << std::endl;
     }
     float length(int x1, int y1, int x2, int y2){
         return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
@@ -26,26 +30,30 @@ public:
             }
         }
 
-        this->seek(Mx, My);
-        this->move();
-
         //this->evasion(Width, Height);
+
+        std::cout << targetX - this->x << " " << targetY - this->y << " " << this->rotate << std::endl;
+        this->seek(this->targetX, this->targetY);
+        this->move(Mx, My);
         
         //this->separation(boids);
         //this->coherence(boids);
 
         //rotate += 0.01;
 
-        if(this->rotate > M_PI * 2){
+        /*if(this->rotate > M_PI * 2){
             this->rotate -= M_PI * 2;
         }
         if(this->rotate < 0){
             this->rotate += M_PI * 2;
-        }
+        }*/
+        //this->targetX = Mx;
+        //this->targetY = My;
     }
 
     void seek(float mx, float my){
-        float speed = 0.003;
+        float speed = 0.3;
+        float min_speed = 1;
 
         float x = mx - this->x;
         float y = my - this->y;
@@ -56,33 +64,35 @@ public:
         else if(y < 0)speedY -= speed;
 
         float l = sqrt(speedX * speedX + speedY * speedY);
-        this->rotate = acos(speedX / l);
-        if(speedY < 0)this->rotate = M_PI * 2 - this->rotate;
-
+        if(x != 0 && y != 0){
+            this->rotate = acos(speedX / l);
+            if(speedY < 0)this->rotate = M_PI * 2 - this->rotate;
+        }
         if(l > this->maxSpeed){
             speedX = cos(this->rotate) * maxSpeed;
             speedY = sin(this->rotate) * maxSpeed;
         }
+        if(x == 0 && y == 0){
+            speedX = cos(this->rotate) * min_speed;
+            speedY = sin(this->rotate) * min_speed;
+        }
     }
 
-    void move(){
+    void move(float Mx, float My){
         this->x += this->speedX;
         this->y += this->speedY;
+        //std::cout << targetX - this->x << " " << targetY - this->y << " " << this->rotate << std::endl;
+        this->targetX = this->x;
+        this->targetY = this->y;
+        //std::cout << targetX - this->x << " " << targetY - this->y << " " << this->rotate << std::endl;
     }
 
     void evasion(int Width, int Height){
-        float turn = 0.01;
-        if(this->x < this->MAX_LENGTH){
-            this->rotate += (this->rotate > M_PI) ? turn * (this->MAX_LENGTH / this->x) : -turn * (this->MAX_LENGTH / this->x);
-        }
-        if(this->y < this->MAX_LENGTH){
-            this->rotate += (this->rotate > M_PI / 2 && this->rotate < M_PI / 2 + M_PI) ? -turn * (this->MAX_LENGTH / this->y): turn * (this->MAX_LENGTH / this->y);
-        }
-        if(this->y > Height - this->MAX_LENGTH){
-            this->rotate += (this->rotate > M_PI / 2 && this->rotate < M_PI / 2 + M_PI) ? turn * (this->MAX_LENGTH / (Height - this->y)): -turn * (this->MAX_LENGTH / (Height - this->y));
-        }
-        if(this->x > Width - this->MAX_LENGTH){
-            this->rotate += (this->rotate > M_PI) ? -turn * (this->MAX_LENGTH / (Width - this->x)): turn * (this->MAX_LENGTH / (Width - this->x));
+        float max_distance = 200;
+        float force = 10;
+
+        if(this->x < max_distance){
+            this->targetX += force;
         }
     }
 

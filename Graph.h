@@ -35,10 +35,10 @@ public:
     void render(int frame, std::vector<Boids>boids){
         this->window.clear(sf::Color(50,50,50));
 
-        sf::CircleShape circle(30, 100);
+        /*sf::CircleShape circle(30, 100);
         circle.setPosition(sf::Mouse::getPosition(this->window).x - 30, sf::Mouse::getPosition(this->window).y - 30);
         circle.setFillColor(sf::Color(255, 255, 255, 100));
-        this->window.draw(circle);
+        this->window.draw(circle);*/
         
         DrawMainBoid(boids, frame);
 
@@ -102,6 +102,9 @@ public:
         drawLine(boids[0].x, boids[0].y, cos(r) * 100 + boids[0].x, sin(r) * 100 + boids[0].y, 1, sf::Color(250, 100, 100, 255));*/
 
         Draw_Boids(boids[0].x, boids[0].y, boids[0].rotate, this->BOIDS_SIZE, sf::Color(150,150,255));
+
+        //std::cout << boids[0].targetX - boids[0].x << " " << boids[0].targetY - boids[0].y << std::endl;
+        drawLine(boids[0].x, boids[0].y, boids[0].targetX, boids[0].targetY, 1, sf::Color(255,100,100,255));
     }
 
     void drawLine(int x1, int y1, int x2, int y2, int s, sf::Color color){
