@@ -4,7 +4,7 @@
 
 class Boids{
 public:
-    int MAX_LENGTH = 150;
+    int MAX_LENGTH = 100;
     float MAX_TURN = 0.025;
     float x, y;
     float rotate;
@@ -27,11 +27,26 @@ public:
         this->separation(boids);
 
         x += cos(this->rotate) * 1;
-        y -= sin(this->rotate) * 1;
+        y += sin(this->rotate) * 1;
         //rotate += 0.01;
     }
 
     void separation(std::vector<Boids>boids){
-        
+        float vectorX = 0, vectorY = 0;
+
+        for(int i = 0; i < boids.size(); i++){
+            float l = sqrt((this->x - boids[i].x) * (this->x - boids[i].x) + (this->y - boids[i].y) * (this->y - boids[i].y));
+            vectorX += this->x - boids[i].x;
+            vectorY += this->y - boids[i].y;
+        }
+
+        float a = sqrt(vectorX * vectorX + vectorY * vectorY);
+        float r = this->rotate;
+
+        if(a > 0)r = acos(vectorX / a);
+        if(vectorY < 0)r = M_PI * 2 - r;
+        if(a > 0)r = (r - this->rotate) * (1 / a) + this->rotate;
+
+        this->rotate = r;
     }
 };

@@ -3,11 +3,11 @@
 #include "random.h"
 
 int main(){
-    const int MAX_BOIDS = 25;
+    const int MAX_BOIDS = 20;
     int frame = 0;
     Graph gr = Graph();
     std::vector<Boids>boids = std::vector<Boids>();
-    Boids boid = Boids(100, gr.Height - 100, 3.1);
+    Boids boid = Boids(100, gr.Height - 100, 4);
     boids.push_back(boid);
     for(int i = 0; i < MAX_BOIDS; i++){
         boid = Boids(rnd(0,gr.Width), rnd(0,gr.Height), (float)rnd(0,100) / 10);

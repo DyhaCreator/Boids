@@ -8,7 +8,7 @@ public:
     bool isOpen = true;
     const int Width = 1080;
     const int Height = 720;
-    const int FrameRate = 25;
+    const int FrameRate = 100;
     const int BOIDS_SIZE = 25;
     sf::Event ev;
     sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(1080,720), "Test Gen");
@@ -31,7 +31,7 @@ public:
     void render(int frame, std::vector<Boids>boids){
         this->window.clear(sf::Color(50,50,50));
         
-        DrawMainBoid(boids);
+        DrawMainBoid(boids, frame);
 
         for(int i = 1; i < boids.size(); i++){
             Draw_Boids(boids[i].x, boids[i].y, boids[i].rotate, this->BOIDS_SIZE, sf::Color(255,255,255));
@@ -40,13 +40,11 @@ public:
         this->window.display();
     }
 
-    void DrawMainBoid(std::vector<Boids>boids){
+    void DrawMainBoid(std::vector<Boids>boids, int frame){
         sf::CircleShape circle(boids[0].MAX_LENGTH, 100);
         circle.setPosition(boids[0].x - boids[0].MAX_LENGTH, boids[0].y - boids[0].MAX_LENGTH);
         circle.setFillColor(sf::Color(255, 255, 255, 50));
         this->window.draw(circle);
-
-        Draw_Boids(boids[0].x, boids[0].y, boids[0].rotate, this->BOIDS_SIZE, sf::Color(150,150,255));
 
         std::vector<Boids>b = std::vector<Boids>();
 
@@ -55,10 +53,25 @@ public:
                 b.push_back(boids[i]);
         }
 
+        float vectorX = 0, vectorY = 0;
+
         for(int i = 0; i < b.size(); i++){
-            float l = sqrt((boids[0].x - boids[i].x) * (boids[0].x - boids[i].x) + (boids[0].y - boids[i].y) * (boids[0].y - boids[i].y));
+            float l = sqrt((boids[0].x - b[i].x) * (boids[0].x - b[i].x) + (boids[0].y - b[i].y) * (boids[0].y - b[i].y));
             drawLine(boids[0].x, boids[0].y, b[i].x, b[i].y, 1, sf::Color(250, 100, 100, 255));
+            vectorX += boids[0].x - b[i].x;
+            vectorY += boids[0].y - b[i].y;
         }
+        float a = sqrt(vectorX * vectorX + vectorY * vectorY);
+        float r = boids[0].rotate;
+        if(a > 0)r = acos(vectorX / a);
+        if(vectorY < 0)r = M_PI * 2 - r;
+        if(a > 0)r = (r - boids[0].rotate) * (1 / a) + boids[0].rotate;
+        //std::cout << r << std::endl;
+
+        drawLine(boids[0].x, boids[0].y, cos(r) * 100 + boids[0].x, sin(r) * 100 + boids[0].y, 1, sf::Color(250, 250, 100, 255));
+        //drawLine(boids[0].x, boids[0].y, vectorX + boids[0].x, vectorY + boids[0].y, 1, sf::Color(250, 250, 250, 255));
+
+        Draw_Boids(boids[0].x, boids[0].y, boids[0].rotate, this->BOIDS_SIZE, sf::Color(150,150,255));
     }
 
     void drawLine(int x1, int y1, int x2, int y2, int s, sf::Color color){
@@ -86,9 +99,9 @@ public:
         convex.setPointCount(3);
         convex.setFillColor(color);
 
-        convex.setPoint(0, sf::Vector2f(cos(angle) * size / 2 + x, y - sin(angle) * size / 2));
-        convex.setPoint(1, sf::Vector2f(cos(angle - M_PI + BOTTOM_ANGLE) * size / 2 + x, y - sin(angle - M_PI + BOTTOM_ANGLE) * size / 2));
-        convex.setPoint(2, sf::Vector2f(cos(angle - M_PI - BOTTOM_ANGLE) * size / 2 + x, y - sin(angle - M_PI - BOTTOM_ANGLE) * size / 2));
+        convex.setPoint(0, sf::Vector2f(cos(angle) * size / 2 + x, y + sin(angle) * size / 2));
+        convex.setPoint(1, sf::Vector2f(cos(angle - M_PI + BOTTOM_ANGLE) * size / 2 + x, y + sin(angle - M_PI + BOTTOM_ANGLE) * size / 2));
+        convex.setPoint(2, sf::Vector2f(cos(angle - M_PI - BOTTOM_ANGLE) * size / 2 + x, y + sin(angle - M_PI - BOTTOM_ANGLE) * size / 2));
 
         this->window.draw(convex);
         /*
