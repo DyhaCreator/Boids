@@ -6,9 +6,11 @@
 class Graph{
 public:
     bool isOpen = true;
+    int Mx = 0;
+    int My = 0;
     const int Width = 1080;
     const int Height = 720;
-    const int FrameRate = 100;
+    const int FrameRate = 250;
     const int BOIDS_SIZE = 25;
     sf::Event ev;
     sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(1080,720), "Test Gen");
@@ -19,6 +21,8 @@ public:
 
     void update(){
         this->isOpen = this->window.isOpen();
+        this->Mx = sf::Mouse::getPosition(this->window).x;
+        this->My = sf::Mouse::getPosition(this->window).y;
         while(this->window.pollEvent(this->ev)){
             switch(this->ev.type){
             case sf::Event::Closed:
@@ -30,6 +34,11 @@ public:
 
     void render(int frame, std::vector<Boids>boids){
         this->window.clear(sf::Color(50,50,50));
+
+        sf::CircleShape circle(30, 100);
+        circle.setPosition(sf::Mouse::getPosition(this->window).x - 30, sf::Mouse::getPosition(this->window).y - 30);
+        circle.setFillColor(sf::Color(255, 255, 255, 100));
+        this->window.draw(circle);
         
         DrawMainBoid(boids, frame);
 
@@ -53,7 +62,7 @@ public:
                 b.push_back(boids[i]);
         }
 
-        float vectorX = 0, vectorY = 0;
+        /*float vectorX = 0, vectorY = 0;
 
         for(int i = 0; i < b.size(); i++){
             float l = sqrt((boids[0].x - b[i].x) * (boids[0].x - b[i].x) + (boids[0].y - b[i].y) * (boids[0].y - b[i].y));
@@ -70,6 +79,27 @@ public:
 
         drawLine(boids[0].x, boids[0].y, cos(r) * 100 + boids[0].x, sin(r) * 100 + boids[0].y, 1, sf::Color(250, 250, 100, 255));
         //drawLine(boids[0].x, boids[0].y, vectorX + boids[0].x, vectorY + boids[0].y, 1, sf::Color(250, 250, 250, 255));
+
+        float cohX = boids[0].x, cohY = boids[0].y;
+
+        for(int i = 0; i < b.size(); i++){
+            cohX += b[i].x;
+            cohY += b[i].y;
+            cohX /= 2;
+            cohY /= 2;
+        }
+
+        cohX -= boids[0].x;
+        cohY -= boids[0].y;
+
+        float l = sqrt(cohX * cohX + cohY * cohY);
+        float r = boids[0].rotate;
+        if(l > 0)r = acos(cohX / l);
+        if(cohY < 0)r = M_PI * 2 - r;
+        if(l > 0)r = (r - boids[0].rotate) * 0.1 + boids[0].rotate;
+        
+        drawLine(boids[0].x, boids[0].y, cohX + boids[0].x, cohY + boids[0].y, 1, sf::Color(250,250,100,255));
+        drawLine(boids[0].x, boids[0].y, cos(r) * 100 + boids[0].x, sin(r) * 100 + boids[0].y, 1, sf::Color(250, 100, 100, 255));*/
 
         Draw_Boids(boids[0].x, boids[0].y, boids[0].rotate, this->BOIDS_SIZE, sf::Color(150,150,255));
     }
